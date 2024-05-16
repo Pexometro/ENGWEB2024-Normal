@@ -1,22 +1,39 @@
 
-- Quantos registos estão na base de dados;
+1. Quantos registos estão na base de dados;
+db.contratos.countDocuments()
 
-> `db.contratos.countDocuments();`
+2. Quantos registos de contratos têm o tipo de procedimento com valor "Ajuste Direto Regime Geral"?
+db.contratos.countDocuments({ "tipoprocedimento": "Ajuste Direto Regime Geral" })
 
-- Quantos registos de contratos têm o tipo de procedimento com valor "Ajuste Direto Regime Geral"?
+3. Qual a lista de entidades comunicantes (ordenada alfabeticamente e sem repetições)
+db.contratos.distinct("entidade_comunicante").sort()
 
-> `db.contratos.countDocuments({ "tipoprocedimento": "Ajuste Direto Regime Geral" });`
-
-- Qual a lista de entidades comunicantes (ordenada alfabeticamente e sem repetições)?
-
-> `db.contratos.distinct("entidade_comunicante").sort();`
-
-- Qual a distribuição de contratos por tipo de procedimento (quantos contratos tem cada tipo de
+4. Qual a distribuição de contratos por tipo de procedimento (quantos contratos tem cada tipo de
 procedimento)?
+db.contratos.aggregate([
+       {
+          $group:{
+             _id: "$tipoprocedimento",
+             total: {$sum: 1}
+          }
+       }
+    ])
 
-> `db.contratos.aggregate([ { $group: { _id: "$tipoprocedimento", total: { $sum: 1 } } } ]);`
+5. Qual o montante global por entidade comunicante (somatório dos contratos associados a uma entidade)?
+db.contratos.aggregate([
+  {
+    $group: {
+      _id: "$entidade_comunicante",
+      totalContratos: { 
+        $sum: { 
+          $cond: [
+            { $eq: [{ $type: "$precoContratual" }, "string"] },
+            { $toDouble: { $replaceOne: { input: { $trim: { input: "$precoContratual", chars: "," } }, find: ",", replacement: "." } } },
+            { $toDouble: "$precoContratual" } 
+          ]
+        }
+      }
+    }
+  }
+])
 
-- Qual o montante global por entidade comunicante (somatório dos contratos associados a uma
-entidade)?
-
-> `db.contratos.aggregate([ { $group: { _id: "$entidade_comunicante", total: { $sum: "$precoContratual" } } } ]);`

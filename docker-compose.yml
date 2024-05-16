@@ -1,20 +1,6 @@
+
+version: '3.8'
 services:
-  backend:
-    build:
-      context: ./ex1
-      dockerfile: Dockerfile
-    ports:
-      - "16000:16000"
-    depends_on:
-      - mongodb
-  frontend:
-    build:
-      context: ./ex2
-      dockerfile: Dockerfile
-    ports:
-      - "16001:16001"
-    depends_on:
-      - backend
   mongodb:
     image: mongo:latest
     ports:
@@ -22,7 +8,9 @@ services:
     depends_on:
       - mongo-seed
   mongo-seed:
+    container_name: testeContratos-mongo-seed
     image: mongo:latest
     volumes:
-      - ./dataset.json:/dataset.json
-    command: mongoimport --host mongodb -d contratos -c contratos --type json --file dataset.json --jsonArray
+      - /mnt/c/Users/pedro/OneDrive/Ambiente de Trabalho/3ano/2sem/ENGWEB2024-Normal/ENGWEB2024-Normal/contratos2024.json:/datasets//mnt/c/Users/pedro/OneDrive/Ambiente de Trabalho/3ano/2sem/ENGWEB2024-Normal/ENGWEB2024-Normal/contratos2024.json
+
+    command: /bin/bash -c "mongoimport --host mongodb -d contratos -c contratos --type json --file /datasets//mnt/c/Users/pedro/OneDrive/Ambiente de Trabalho/3ano/2sem/ENGWEB2024-Normal/ENGWEB2024-Normal/contratos2024.json --jsonArray"

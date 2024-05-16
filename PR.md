@@ -1,35 +1,22 @@
-# Teste 2024
 
-## Autor : Pedro Azevedo
-## Número : A100557
+#1.1 Setup
+- comecei por usar um conversor online para conveter csv para json
+- troquei o id das entradas para _id 
+- depois corri o script script.py para criar um docker-compose com mongodb e as coleções
+    - este script cria um container com mongoDB e outro container para o serviço a desenvolver
+    - fornecidos o nome do dataset, da coleção e o ficheiro do import, o script automaticamente cria, com mongoimport, a coleção (no ficheiro dado) para o container do serviço
+
+- ao acrescentar as entradas ao container com o script, verifiquei que deu o output "36377 document(s) imported successfully", logo foram importadas as entradas corretamente
+
+ as queries corridas estao no ficheiro queries.txt
+
+#1.3 API
+Nesta pergunta
+
+ "GET /contratos?entidade=EEEE:"
+
+ utilizei o nome da entidade como nipc
 
 
-## EX1
-
-Incialmente fiz os seguintes passos:
-
-1. Converter para json usando https://csvjson.com/csv2json
-2. Criar um arquivo `dataset.json` com o conteúdo do json
-3. Trocar o nome do campo do identificador para `_id`
-4. Correr o script python `convert_dataset.py` para resolver formato do preço em caso de decimal.
-4. Executar o container que já conta com o mongo import
-
-
-onde obtive
-
-```bash
-mongo-seed-1  | 2024-05-16T13:12:24.299+0000    36377 document(s) imported successfully. 0 document(s) failed to import.
-```
-
-Para a seguinte pergunta 
-
-`GET /contratos?entidade=EEEE`
-
-foi escolhido o NIPC.
-
-## EX2
-
-Basta `http://localhost:16001` para aparecer a 2 parte do enunciado.
-
-é também possível ver todos os campos do contrato e volta a pagina incial clicando no logo.
-
+#2 Interface
+Para satisfazer no endereço "http://localhost:16001/entidades/:nipc" o requesito "somatório do valor dos contratos", inclui uma nova rota na API: "http://localhost:16000/contratos/entidadeTotal/:idEntidade", que chamo no serviço de interface
